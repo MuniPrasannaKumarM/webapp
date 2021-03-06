@@ -1,0 +1,153 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="style.css">
+<script>
+    function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+  
+  
+}
+
+/* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  
+  
+}
+function switchVisibleotp() 
+                {
+                    
+                    if (document.getElementById('showotp') && document.getElementById('login').value!='' ) {
+                        document.getElementById('div213').style.display = 'none';
+                        document.getElementById('div21').style.display = 'block';
+                    }
+                    
+                }   
+                function switchVisiblepass()
+                {
+                    if(document.getElementById('submitotp') && document.getElementById('verify').value!='')
+                    {
+                        document.getElementById('div21').style.display = 'none';
+                        document.getElementById('div31').style.display = 'block';
+                    }
+                }       
+</script>
+<style>
+    
+        .sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+.page-wrapper {
+	left: 0;
+	margin-left: 0px;
+	padding-top: 0px;
+	position: relative;
+	-webkit-transition: all 0.4s ease;
+	-moz-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+.page-wrapper > .content {
+	padding: 0px;
+}
+.page-title {
+	color: #565656;
+	font-size: 21px;
+	font-weight: normal;
+	margin-bottom: 20px;
+}
+.page-title {
+		font-size: 18px;
+	}
+    .page-title {
+		font-size: 1.2em;
+		padding-top: 10px;
+	}
+
+</style>
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="patient_dashboard.html">Dashboard</a>
+        <a href="view_doctor.html">View Doctors</a>
+        
+        <a href="#"></a>
+      </div>
+      
+      <!-- Use any element to open the sidenav -->
+      <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+    <div id="main">
+      <div class="wrapper fadeInDown">
+            <div id="formContent">
+                <div class="fadeIn first">
+                    <img src="https://www.clipartmax.com/png/small/136-1366554_health-sign-blue-icon-doctor-consultation-icon.png" id="icon" alt="" class="img-responsive img-rounded"style="max-height: 100px; max-width: 75px;"/>
+                </div>  
+                <form action="">
+                    <input type="email" id="login" class="fadeIn second" name="login" placeholder="Email">
+                    
+                    <div id="div213">
+                        <input type="button" class="fadeIn fourth" value="Send Otp" id="showotp" onclick="switchVisibleotp()">
+                    </div>
+                    <div id="div21"class="div2">
+                        <input type="text" name="login" id="verify" placeholder="Enter OTP">
+                        <input type="submit" class="fadeIn fourth" value="Submit Otp" id="submitotp" formaction="./patient_records.html" >
+                        <a class="underlineHover fadeIn fourth" href="#">ReSend OTP</a>
+                    </div>
+                    
+                    <div id="formFooter">
+                        <a class="underlineHover" href="verify_by_patient_pass.html">Verify Using Password</a>
+                      </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="images/js/jquery-3.2.1.min.js"></script>
+	<script src="images/js/popper.min.js"></script>
+    <script src="images/js/bootstrap.min.js"></script>
+    <script src="images/js/jquery.slimscroll.js"></script>
+    <script src="images/js/app.js"></script>
+</body>
+</html>
