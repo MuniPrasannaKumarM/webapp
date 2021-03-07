@@ -216,13 +216,11 @@ a.status-grey {
 										<th>Patient Name</th>
 										<th>Age</th>
 										<th>Appointment Date</th>							
-                                        <th id="attendtitle" style="display: {{submityesorno}};">Attend</th>
+                                        <th >Attend</th>
 
-										<th style="display: {{time1title1}};" id="time1title">Start Time</th>
-									    <th style="display: {{time1title1}};" id="time2title">End Time</th>
-                                        <th class="text-right" style="display: {{time1title1}};" id="subtitle">Submit</th>
 
-										<th class="text-right" style="display: {{submityesorno}};"id="hidemesub">Submit</th>
+
+										<th  >Submit</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -235,7 +233,7 @@ a.status-grey {
 										<td>{{age[i]}}</td>
 										<td>{{date[i]}}</td>
 										
-                                        <td style="display: {{submityesorno}};">
+                                        <td >
 
                                             	<input type="radio" value="YES" name="yesorno" > YES
 
@@ -245,15 +243,11 @@ a.status-grey {
 									
 
                                         
-										<td style="display: {{submityesorno}};">
-											<input type="submit"  value="submit" name="submityesorno">
+										<td >
+											<button type="submit" name="submit" value="{{pat_name[i]}}" class="btn btn-secondary">Submit</button>
 										</td>
 
-										<td><input type="text" id="time1" style="display: {{time1title1}};" name="start"></td>
-											<td><input type="text" style="display: {{time1title1}};" id="time2" name="end"></td>
-											<td class="text-right" style="display: {{time1title1}};" >
-												<input type="submit" name="submittime" na>
-											</td>
+
 									</tr>
 										{% endfor %}
 									</form>

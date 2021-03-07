@@ -218,7 +218,7 @@ function closeNav() {
                     </div>
                     <div class="row">
                         <div class="col-lg-8 offset-lg-2">
-                            <form method="POST">
+                            <form method="POST" enctype = "multipart/form-data">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
@@ -258,10 +258,10 @@ function closeNav() {
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label>Date of Birth</label>
-                                            <div class="cal-icon">
-                                                <input type="text" class="form-control datetimepicker" name="dob">
-                                            </div>
+                                            <label>Specialism</label>
+
+                                                <input type="text" class="form-control" name="specialism">
+
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -269,12 +269,12 @@ function closeNav() {
                                             <label class="gen-label">Gender:</label>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label">
-                                                    <input type="radio" name="gender" class="form-check-input" >Male
+                                                    <input type="radio" name="gender" value="MALE" class="form-check-input" >Male
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label">
-                                                    <input type="radio" name="gender" class="form-check-input">Female
+                                                    <input type="radio" name="gender" value="FEMALE" class="form-check-input">Female
                                                 </label>
                                             </div>
                                         </div>
@@ -331,7 +331,7 @@ function closeNav() {
                                             <label>Avatar</label>
                                             <div class="profile-upload">
                                                 <div class="upload-img">
-                                                    <img alt="" src="images/img/user.jpg">
+                                                    <img alt="" src="static/images/img/user.jpg">
                                                 </div>
                                                 <div class="upload-input">
                                                     <input type="file" class="form-control"name="avatar">

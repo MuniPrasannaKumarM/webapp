@@ -348,16 +348,16 @@ function closeNav() {
                             <div class="profile-view">
                                 <div class="profile-img-wrap">
                                     <div class="profile-img">
-                                        <a href="#"><img class="avatar" src="images/img/doctor-03.jpg" alt=""></a>
+                                        <a href="#"><img class="avatar" src="{{profile_pic}}" alt=""></a>
                                     </div>
                                 </div>
                                 <div class="profile-basic">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="profile-info-left">
-                                                <h3 class="user-name m-t-0 mb-0">{{doc}}</h3>
-                                                <small class="text-muted">Gynecologist</small>
-                                                <div class="staff-id">Employee ID : DR-0001</div>
+                                                <h3 class="user-name m-t-0 mb-0">{{doc_fname}} {{doc_lname}}</h3>
+                                                <small class="text-muted">{{specialism}}</small>
+                                                <div class="staff-id">Employee ID : {{doc_id}}</div>
                                                 
                                             </div>
                                         </div>
@@ -365,23 +365,24 @@ function closeNav() {
                                             <ul class="personal-info">
                                                 <li>
                                                     <span class="title">Phone:</span>
-                                                    <span class="text"><a href="#">770-889-6484</a></span>
+                                                    <span class="text"><a href="#">{{phone}}</a></span>
                                                 </li>
                                                 <li>
                                                     <span class="title">Email:</span>
-                                                    <span class="text"><a href="#">cristinagroves@example.com</a></span>
+                                                    <span class="text"><a href="#">{{email}}</a></span>
                                                 </li>
-                                                <li>
-                                                    <span class="title">Birthday:</span>
-                                                    <span class="text">3rd March</span>
-                                                </li>
+
                                                 <li>
                                                     <span class="title">Address:</span>
-                                                    <span class="text">714 Burwell Heights Road, Bridge City, TX, 77611</span>
+                                                    <span class="text">{{address}}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="title">City:</span>
+                                                    <span class="text">{{city}}</span>
                                                 </li>
                                                 <li>
                                                     <span class="title">Gender:</span>
-                                                    <span class="text">Female</span>
+                                                    <span class="text">{{gender}}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -393,8 +394,8 @@ function closeNav() {
                 </div>
 				<div class="profile-tabs">
 					<ul class="nav nav-tabs nav-tabs-bottom">
-						<li class="nav-item"><a class="nav-link active" href="#about-cont" data-toggle="tab">About</a></li>
-						<li class="nav-item"><a class="nav-link" href="#bottom-tab2" data-toggle="tab">Achievements</a></li>
+						<li class="nav-item"><a class="nav-link active" href="#about-cont" data-toggle="tab">Biography</a></li>
+<!--						<li class="nav-item"><a class="nav-link" href="#bottom-tab2" data-toggle="tab">Achievements</a></li>-->
 						
 					</ul>
 

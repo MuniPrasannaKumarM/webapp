@@ -92,74 +92,69 @@
   <script>
           function openNav() {
   document.getElementById("mySidenav").style.width = "250px";
-  
-  
+
+
 }
 
 /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
-  
-  
+
+
 }
   </script>
     </head>
     <body>
       <nav class="navbar navbar-light bg-light justify-content-between ">
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-        
+
         <a class="navbar-brand space">Smart Hosp</a>
-        <form class="form-inline " method="post">
-            
-          
-          <button class="btn btn-outline-secondary " style="margin-right: 30px;" type="submit" name="logout" value="logout">Logout</button>
+        <form class="form-inline " method="post" >
+
+
+          <button class="btn btn-outline-secondary " style="margin-right: 30px;" name="logout" value="logout" type="submit">Logout</button>
         </form>
     </nav>
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="{{url_for('doctor_dashboard')}}">Dashboard</a>
-            <a href="{{url_for('appointments')}}">Appointments</a>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{url_for('appointments')}}">Appointments</a>
             <a href="{{url_for('profile')}}">My Profile</a>
+			<a href="{{url_for('doc_otp')}}">View Patients Record</a>
+			<a href="{{url_for('prescription_by_doctor')}}">Prescriptions</a>
+        <a href="#"></a>
+        <a href="#"></a>
+      </div>
 
-			<a href="{{url_for('prescription')}}">Prescription</a>
-
-         
-            <a href="#"></a>
-          </div>
-          
           <!-- Use any element to open the sidenav -->
-          
+
         <div id="main">
         <div class="container">
             <div class="content">
                 <div class="row">
                     <div class="col-sm-4 col-3">
-                        <h4 class="page-title">Documents of the patients</h4>
-                    </div>
-                    <div class="col-sm-8 col-9 text-right m-b-20">
-                        <a href="{{url_for('prescription')}}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Upload</a>
-                        
+                        <h4 class="page-title">Documents</h4>
                     </div>
                 </div>
                 </div>
-
             <form method="post">
             <table class="table table-hover">
               <thead>
                 <tr>
-                  
+
                   <th>Name of the file</th>
-                  
+
                   <th>file </th>
                 </tr>
               </thead>
               <tbody>
-                {% for i in range(0,record|length): %}
+
+              {% for i in range(0,record|length): %}
                 <tr>
                   <td>{{record[i]}}</td>
                   <td><button type="submit" class="btn" name="open" value="{{record[i]}}"><i class="fa fa-download"></i> Open</button></td>
                 </tr>
               {% endfor %}
+
               </tbody>
             </table>
                 </form>
