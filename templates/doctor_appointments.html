@@ -151,10 +151,10 @@ a.status-grey {
 		<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 		
 		<a class="navbar-brand space">Smart Hosp</a>
-		<form class="form-inline " >
+		<form class="form-inline " method="post">
 			
 		  
-		  <button class="btn btn-outline-secondary " style="margin-right: 30px;" type="submit">Logout</button>
+		  <button class="btn btn-outline-secondary " style="margin-right: 30px;" type="submit" name="logout" value="logout">Logout</button>
 		</form>
 	</nav>
     <div id="mySidenav" class="sidenav">
@@ -163,7 +163,7 @@ a.status-grey {
         <a href="{{url_for('appointments')}}">Appointments</a>
             <a href="{{url_for('profile')}}">My Profile</a>
 			<a href="{{url_for('doc_otp')}}">View Patients Record</a>
-			<a href="{{url_for('prescription')}}">Prescription</a>
+			<a href="{{url_for('prescription_by_doctor')}}">Prescriptions</a>
 
         <a href="#"></a>
       </div>
@@ -179,7 +179,7 @@ a.status-grey {
                     </div>
                     <div class="col-sm-8 col-9 text-right m-b-20">
                         <a href="{{url_for('requests')}}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Requests</a>
-                        <a href="{{url_for('requests')}}" class="btn btn btn-primary btn-rounded float-left ml-5"><i class="fa fa-adjust "></i> All Patients</a>
+
                     </div>
                 </div>
 				<div class="row">
@@ -212,7 +212,7 @@ a.status-grey {
 											<div class="dropdown dropdown-action">
 												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item" href=""><i class="fa fa-pencil m-r-5"></i> Reschedule</a>
+													<a class="dropdown-item" href="{{url_for('appointment_confirm', pat_name = pat_name[i])}}"><i class="fa fa-pencil m-r-5"></i> Reschedule</a>
 													
 												</div>
 											</div>

@@ -107,6 +107,7 @@ def login_pat():
         myresult = mycursor.fetchall()
         if(len(myresult)>=1):
             print(myresult[0][0])
+
             session['emailme'] = emailme
             return redirect(url_for('patient_dashboard'))
     return render_template('login_patient.html')
@@ -136,6 +137,7 @@ def verify_pat_pass():
             mycursor.execute(sql)
             myresult = mycursor.fetchall()
             if(len(myresult)>=1):
+                session['pat_name'] = myresult[0][0]
                 return redirect(url_for('patient_rec'))
     return render_template('verify_by_patient_pass.html')
 @app.route('/login_doctors',methods=['POST','GET'])
@@ -167,6 +169,10 @@ def view_doc():
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     i=0
+    if request.method == 'POST':
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
     for x in myresult:
         # for i in range(len(myresult)):
        # print(x[1])
@@ -213,10 +219,15 @@ def patient_rec():
     for x in myresult:
         record.append(x[1])
         pres_picture.append(x[0])
+    print(pres_picture)
     if (request.method == 'POST'):
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
         open = request.form.get('open')
         for i in range(0, len(record)):
             if (open == record[i]):
+                print(pres_picture[i])
                 return redirect(url_for('pres_pic', pic=pres_picture[i]))
         # img = send_file(url_for('static', filename='images/doctor.png'),mimetype='image')
         logout = request.form.get('logout')
@@ -263,24 +274,72 @@ def login_admin():
     return render_template('login_admin.html')
 @app.route('/admin_dashboard',methods=['POST','GET'])
 def admin_dashboard():
+    if request.method == 'POST':
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
     sql = "select count(DISTINCT(doctor_name)),count(DISTINCT(patient_username)),sum(if(category = 'NEW PATIENTS',1,0)),sum(if(category = 'OPD',1,0)),sum(if(status = 'attended',1,0)),sum(if(status = 'waiting',1,0)),sum(if(category = 'LABORARTORY',1,0)),sum(if(category = 'TREATMENT',1,0)),sum(if(category = 'DISCHARGE',1,0)) from doctor_patient_relation"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
+    sql1 = "select count(DISTINCT(email)) from doctor_details"
+    mycursor.execute(sql1)
+    myresult1 = mycursor.fetchall()
+    sql2 = "select count(DISTINCT(email)) from patient_details"
+    mycursor.execute(sql2)
+    myresult2 = mycursor.fetchall()
+    sql3 = "select date from doctor_patient_relation"
+    mycursor.execute(sql3)
+    myresult3 = mycursor.fetchall()
     print(myresult)
     for x in myresult:
         print(int(x[2]))
         print(int(x[3]))
         print(int(x[4]))
-    doctor = myresult[0][0]
-    patients = myresult[0][1]
+    print("date ", myresult3)
+    months = [0,0,0,0,0,0,0,0,0,0,0,0]
+    weeks =[0,1,0,2,0,0,5]
+    for x in myresult3:
+        month = x[0].split(' ')
+        print(month[1])
+        if month[1] == 'jan':
+            months[0]+=1
+        elif month[1] == 'feb':
+            months[1]+=1
+        elif month[1] == 'mar':
+            months[2]+=1
+        elif month[1] == 'apr':
+            months[3]+=1
+        elif month[1] == 'may':
+            months[4]+=1
+        elif month[1] == 'jun':
+            months[5]+=1
+        elif month[1] == 'july':
+            months[6]+=1
+        elif month[1] == 'aug':
+            months[7]+=1
+        elif month[1] == 'sept':
+            months[8]+=1
+        elif month[1] == 'oct':
+            months[9]+=1
+        elif month[1] == 'nov':
+            months[10]+=1
+        elif month[1] == 'dec':
+            months[11]+=1
+
+    doctor = myresult1[0][0]
+    patients = myresult2[0][0]
     attended = int(myresult[0][4])
     waiting = int(myresult[0][5])
     percent = [int(myresult[0][3]), int(myresult[0][2]), int(myresult[0][6]),int(myresult[0][7]), int(myresult[0][8])]
     dept = ['OPD', 'NEWPATIENTS', 'LABORARTORY', 'TREATMENT', 'DISCHARGE']
-    return render_template('admin_dashboard.html',doctor=doctor,patients=patients,attended=attended,waiting=waiting,percent=percent,dept=dept)
+    return render_template('admin_dashboard.html',doctor=doctor,patients=patients,attended=attended,waiting=waiting,percent=percent,dept=dept,months=months,weeks =weeks)
 
 @app.route('/doctors_page',methods=['POST','GET'])
 def doctor_page():
+    if request.method =='POST':
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
     doctors = []
     specialism = []
     places = []
@@ -317,7 +376,9 @@ def doctor_page():
 @app.route('/add_doctor', methods=['POST', 'GET'])
 def add_doc():
     if request.method == 'POST':
-
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
         first = request.form.get('first')
         last = request.form.get('last')
         username = request.form.get('username')
@@ -375,6 +436,10 @@ def add_doc():
     return render_template('add_doctors.html')
 @app.route('/patient_page',methods=['POST','GET'])
 def patient_page():
+    if request.method == 'POST':
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
     # name = ['Jennifer Robinson', 'Terry Baker', 'Kyle Bowman', 'Marie Howard', 'Joshua Guzman']
     # age=[35, 65, 7, 22, 34]
     # phone = ['(207) 808 8863', '(376) 150 6975', '(981) 756 6128', '(634) 09 3833', '(407) 554 4146']
@@ -391,6 +456,13 @@ def patient_page():
         age.append(myresult[i][1])
         phone.append(myresult[i][2])
         email.append(myresult[i][3])
+    if request.method == 'POST':
+        delete = request.form.get('delete')
+        print("delete ",delete)
+        sql1 = "delete from patient_details where email = '"+delete+"'"
+        mycursor.execute(sql1)
+        mydb.commit()
+        return redirect(url_for('patient_page'))
     return render_template('patients_page.html', name=name,age=age,phone=phone,email=email)
 @app.route('/doctor_dashboard',methods=['POST','GET'])
 def doctor_dashboard():
@@ -400,19 +472,64 @@ def doctor_dashboard():
     mycursor.execute(sql,val)
     myresult = mycursor.fetchall()
     print(myresult)
-    for x in myresult:
-        print(int(x[2]))
-        print(int(x[3]))
-        print(int(x[4]))
+    if request.method == 'POST':
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
 
     patients = myresult[0][1]
-    attended = int(myresult[0][4])
-    waiting = int(myresult[0][5])
-    percent = [int(myresult[0][3]), int(myresult[0][2]), int(myresult[0][6]), int(myresult[0][7]), int(myresult[0][8])]
-    dept = ['OPD', 'NEWPATIENTS', 'LABORARTORY', 'TREATMENT', 'DISCHARGE']
+    print(patients)
+    if patients == 0:
+        months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        weeks = [0, 0, 0, 0, 0, 0, 0]
+        patients =0
+        attended = 0
+        waiting = 0
+        percent = [0,0,0,0,0]
+        dept = ['OPD', 'NEWPATIENTS', 'LABORARTORY', 'TREATMENT', 'DISCHARGE']
+        return render_template('doctor_dashboard.html', total=patients, today=5, attended=attended, waiting=waiting,
+                               percent=percent, dept=dept,months=months,weeks=weeks)
+    else:
+        sql3 = "select date from doctor_patient_relation where doctor_name='"+doc_name+"'"
+        mycursor.execute(sql3)
+        myresult3 = mycursor.fetchall()
+        months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        weeks = [0, 1, 0, 2, 0, 0, 5]
+        for x in myresult3:
+            month = x[0].split(' ')
+            print(month[1])
+            if month[1] == 'jan':
+                months[0] += 1
+            elif month[1] == 'feb':
+                months[1] += 1
+            elif month[1] == 'mar':
+                months[2] += 1
+            elif month[1] == 'apr':
+                months[3] += 1
+            elif month[1] == 'may':
+                months[4] += 1
+            elif month[1] == 'jun':
+                months[5] += 1
+            elif month[1] == 'july':
+                months[6] += 1
+            elif month[1] == 'aug':
+                months[7] += 1
+            elif month[1] == 'sept':
+                months[8] += 1
+            elif month[1] == 'oct':
+                months[9] += 1
+            elif month[1] == 'nov':
+                months[10] += 1
+            elif month[1] == 'dec':
+                months[11] += 1
+        attended = int(myresult[0][4])
+        waiting = int(myresult[0][5])
+        percent = [int(myresult[0][3]), int(myresult[0][2]), int(myresult[0][6]), int(myresult[0][7]), int(myresult[0][8])]
 
-    return render_template('doctor_dashboard.html', total=patients,today=5, attended=attended, waiting=waiting,
-                           percent=percent, dept=dept)
+        dept = ['OPD', 'NEWPATIENTS', 'LABORARTORY', 'TREATMENT', 'DISCHARGE']
+
+        return render_template('doctor_dashboard.html', total=patients,today=5, attended=attended, waiting=waiting,
+                           percent=percent, dept=dept,months=months,weeks=weeks)
 @app.route('/appointments', methods=['POST','GET'])
 def appointments():
     app_id = []
@@ -421,7 +538,9 @@ def appointments():
     date = []
     starttime = []
     endtime = []
-    sql = "select * from appointment_details where attend = 'YES' and doctor_id = 'maha'"
+    doc_id = session['doc_name']
+    sql = "select * from appointment_details where attend = 'YES' and doctor_id = '"+doc_id+"'"
+    print(doc_id)
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     for x in myresult:
@@ -438,12 +557,19 @@ def appointments():
     status =['Attending', 'Waiting']
     color = ['green', 'purple']
     if request.method == 'POST':
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
         completed = request.form.get('completed')
         for i in range(0,len(pat_name)):
             if completed == pat_name[i]:
                 sql = "delete from appointment_details where patient_name = %s"
                 val = (completed,)
                 mycursor.execute(sql,val)
+                mydb.commit()
+                sql1 = "Insert into doctor_patient_relation Values(%s,%s,%s,%s,%s)"
+                val1 = (doc_id,completed,'OPD',date[i],'attended')
+                mycursor.execute(sql1, val1)
                 mydb.commit()
                 return render_template('doctor_appointments.html', app_id=app_id, pat_name=pat_name, age=age, date=date,
                                        starttime=starttime, endtime=endtime)
@@ -456,7 +582,8 @@ def requests():
     pat_name= []
     age = []
     date=[]
-    sql = "select * from appointment_details where attend = 'NO' and doctor_id = 'maha'"
+    doc_id = session['doc_name']
+    sql = "select * from appointment_details where attend = 'NO' and doctor_id = '"+doc_id+"'"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     for x in myresult:
@@ -465,7 +592,9 @@ def requests():
         age.append(x[2])
         date.append(x[3])
     if request.method == 'POST':
-
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
         yesorno = request.form.get('yesorno')
 
         submit = request.form.get('submit')
@@ -520,10 +649,14 @@ def appointment_confirm(pat_name):
         sql1 = "UPDATE appointment_details SET start='" + str(startdate) + "' , end='" + str(enddate) + "', attend='YES' where patient_name='" + patient_name + "'"
         mycursor.execute(sql1)
         mydb.commit()
-        return redirect(url_for('requests'))
+        return redirect(url_for('appointments'))
     return render_template('appointment_confirm.html',app_id=app_id,patient_name=patient_name,age=age,date=date)
 @app.route('/profile', methods=['POST', 'GET'])
 def profile():
+    if request.method == 'POST':
+        logout = request.form.get('logout')
+        if (logout == 'logout'):
+            return redirect(url_for('main'))
     print(session['email_doc'])
     doc_email = session['email_doc']
     sql = "select * from doctor_details where email = %s"
@@ -537,7 +670,7 @@ def profile():
         details = x
     if len(details)==0:
         return redirect(url_for('doctor_dashboard'))
-    return render_template('view_doctor_profile.html', doc_id=details[0], doc_fname=details[1], doc_lname=details[2],
+    return render_template('doctor_profile.html', doc_id=details[0], doc_fname=details[1], doc_lname=details[2],
                            uname=details[3], email=details[4], specialism=details[6], gender=details[7],
                            address=details[8], country=details[9], city=details[10], state=details[11],
                            pincode=details[12], phone=details[13], profile_pic=details[14], bio=details[15])
@@ -583,14 +716,14 @@ def doc_pass():
         for x in myresult:
             pat_name = x[0]
         if (len(myresult) >= 1):
-            session['pat_name'] = pat_name
+            session['pat_name1'] = pat_name
             return redirect(url_for('documents'))
     return render_template('verify_by_doctor_pass.html')
 @app.route('/documents_doctor', methods=['POST', 'GET'])
 def documents():
     record = []
     pres_picture = []
-    pat_username = session['pat_name']
+    pat_username = session['pat_name1']
     sql = "select prescription,prescription_name from patient_rec where pat_username = %s"
     val = (pat_username,)
     mycursor.execute(sql, val)
@@ -671,7 +804,7 @@ def prescription():
         filename = 'static\images\prescription\Dr.'+doc_name+'@'+str(date1)+'.png'
         pres_filename = 'Dr.'+doc_name+'@'+str(date1)
         img.save(filename)
-        pat_name = session['pat_name']
+        pat_name = session['pat_name1']
         doc_file = 'static\images\prescription_by_doc\Mr.'+pat_name+'@'+str(date1)+'.png'
         pres_filename_doc = 'Mr.'+pat_name+'@'+str(date1)
         img.save(doc_file)

@@ -117,6 +117,7 @@ function closeNav() {
     </nav>
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{url_for('doctor_dashboard')}}">Dashboard</a>
         <a href="{{url_for('appointments')}}">Appointments</a>
             <a href="{{url_for('profile')}}">My Profile</a>
 			<a href="{{url_for('doc_otp')}}">View Patients Record</a>

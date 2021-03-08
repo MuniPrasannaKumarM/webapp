@@ -319,7 +319,7 @@ function closeNav() {
         <form class="form-inline " >
             
           
-          <button class="btn btn-outline-secondary " style="margin-right: 30px;" type="submit">Logout</button>
+          <button class="btn btn-outline-secondary " style="margin-right: 30px;" type="submit" name="logout" value="logout">Logout</button>
         </form>
     </nav>
     <div id="mySidenav" class="sidenav">
@@ -328,7 +328,7 @@ function closeNav() {
        <a href="{{url_for('appointments')}}">Appointments</a>
 
 			<a href="{{url_for('doc_otp')}}">View Patients Record</a>
-			<a href="{{url_for('prescription')}}">Prescription</a>
+			<a href="{{url_for('prescription_by_doctor')}}">Prescriptions</a>
 
             
       </div>
@@ -341,10 +341,7 @@ function closeNav() {
                     <div class="col-sm-7 col-6">
                         <h4 class="page-title">Doctor Profile</h4>
                     </div>
-                    <div class="col-sm-4 col-9 text-right m-b-20 offset-sm-3">
-                        <a href="javascript:void(0)" disabled="disabled" class="btn btn btn-primary btn-rounded text-right" >For booking appointments Install App</a>
 
-                    </div>
 
 
                 </div>

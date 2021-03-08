@@ -149,7 +149,7 @@ function closeNav() {
               {% for i in range(0,record|length): %}
                 <tr>
                   <td>{{record[i]}}</td>
-                  <td><button type="submit" class="btn" name="{{record[i]}}" value="{{record[i]}}"><i class="fa fa-download"></i> Open</button></td>
+                  <td><button type="submit" class="btn" name="open" value="{{record[i]}}"><i class="fa fa-download"></i> Open</button></td>
                 </tr>
               {% endfor %}
 

@@ -24,25 +24,29 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	animationEnabled: true,
 	theme: "light2", // "light1", "light2", "dark1", "dark2"
 	title:{
-		// text: "Top Oil Reserves"
+		text: "Patient Total"
 	},
 	axisY: {
-		title: "Reserves(MMbbl)"
+		title: "COUNT"
 	},
 	data: [{        
 		type: "column",  
 		showInLegend: true, 
 		legendMarkerColor: "grey",
-		legendText: "MMbbl = one million barrels",
+		legendText: "PATIENTS TOTAL IN MONTHS",
 		dataPoints: [      
-			{ y: 300878, label: "Venezuela" },
-			{ y: 266455,  label: "Saudi" },
-			{ y: 169709,  label: "Canada" },
-			{ y: 158400,  label: "Iran" },
-			{ y: 142503,  label: "Iraq" },
-			{ y: 101500, label: "Kuwait" },
-			{ y: 97800,  label: "UAE" },
-			{ y: 80000,  label: "Russia" }
+			{ y: {{months[0]}}, label: "JAN" },
+			{ y: {{months[1]}},  label: "FEB" },
+			{ y: {{months[2]}},  label: "MAR" },
+			{ y: {{months[3]}},  label: "APR" },
+			{ y: {{months[4]}},  label: "MAY" },
+			{ y: {{months[5]}}, label: "JUNE" },
+			{ y: {{months[6]}},  label: "JULY" },
+			{ y: {{months[7]}},  label: "AUG" },
+			{ y: {{months[8]}},  label: "SEPT" },
+			{ y: {{months[9]}},  label: "OCT" },
+			{ y: {{months[10]}}, label: "NOV" },
+			{ y: {{months[11]}},  label: "DEC" }
 		]
 	}]
 });
@@ -52,25 +56,24 @@ var chart = new CanvasJS.Chart("chartContainer1", {
 	animationEnabled: true,
 	theme: "light2", // "light1", "light2", "dark1", "dark2"
 	title:{
-		// text: "Top Oil Reserves"
+		 text: "Patients In"
 	},
 	axisY: {
-		title: "Reserves(MMbbl)"
+		title: "COUNT"
 	},
 	data: [{        
 		type: "column",  
 		showInLegend: true, 
 		legendMarkerColor: "grey",
-		legendText: "MMbbl = one million barrels",
+		legendText: "PATIENT'S IN IN WEEKS",
 		dataPoints: [      
-			{ y: 300878, label: "Venezuela" },
-			{ y: 266455,  label: "Saudi" },
-			{ y: 169709,  label: "Canada" },
-			{ y: 158400,  label: "Iran" },
-			{ y: 142503,  label: "Iraq" },
-			{ y: 101500, label: "Kuwait" },
-			{ y: 97800,  label: "UAE" },
-			{ y: 80000,  label: "Russia" }
+			{ y: {{weeks[0]}}, label: "MON" },
+			{ y: {{weeks[1]}},  label: "TUES" },
+			{ y: {{weeks[2]}},  label: "WED" },
+			{ y: {{weeks[3]}},  label: "THURS" },
+			{ y: {{weeks[4]}},  label: "FRI" },
+			{ y: {{weeks[5]}}, label: "SAT" },
+			{ y: {{weeks[6]}},  label: "SUN" },
 		]
 	}]
 });
@@ -338,10 +341,10 @@ chart.render();
 			<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 			
             <a class="navbar-brand space">Smart Hosp</a>
-            <form class="form-inline " >
+            <form class="form-inline " method="post">
                 
               
-              <button class="btn btn-outline-secondary " style="margin-right: 30px;" type="submit">Logout</button>
+              <button class="btn btn-outline-secondary " style="margin-right: 30px;" type="submit" name="logout" value="logout">Logout</button>
             </form>
         </nav>
         <div id="mySidenav" class="sidenav">
@@ -349,7 +352,7 @@ chart.render();
             <a href="{{url_for('appointments')}}">Appointments</a>
             <a href="{{url_for('profile')}}">My Profile</a>
 			<a href="{{url_for('doc_otp')}}">View Patients Record</a>
-			<a href="{{url_for('prescription')}}">Prescription</a>
+			<a href="{{url_for('prescription_by_doctor')}}">Prescriptions</a>
             <a href="{{url_for('main')}}">Logout</a>
             
           </div>
