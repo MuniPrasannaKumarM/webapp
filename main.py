@@ -7,6 +7,8 @@ from PIL import Image,ImageDraw,ImageFont
 from datetime import date
 import mysql.connector
 from werkzeug.utils import secure_filename
+import hashlib
+import hmac
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -81,15 +83,29 @@ def signup_pat():
             confirm = request.form.get('confirm')
             print(password)
             print(confirm)
+
             if(password == confirm):
                 # msg1 = Message('OTP', sender='mmpkvelammal@gmail.com', recipients=[email])
                 # msg1.body = "Successfully Registered as patient"
                 # mail.send(msg1)
+                password_to_encrypt = password.encode()
+                salt_key = os.urandom(16)
+                password_hash = hashlib.pbkdf2_hmac("sha256", password_to_encrypt, salt_key, 100000)
                 #%s, %s, %s,%s,%d,%s
+                sql0 = "Select email from patient_details where email = '"+email+"'"
+                mycursor.execute(sql0)
+                myrs = mycursor.fetchall()
+                if len(myrs) != 0:
+                    return redirect(url_for('signup_pat'))
                 sql = "INSERT INTO patient_details (name,username,phone,email,age,password) VALUES (%s, %s, %s,%s,%s,%s)"
-                val = (name,uname,mob,email,age,password)
+                val = (name,uname,mob,email,age,password_hash)
                 mycursor.execute(sql, val)
                 mydb.commit()
+                sql1 = "Insert into pat_hash values(%s,%s)"
+                val1 = (email,salt_key)
+                mycursor.execute(sql1, val1)
+                mydb.commit()
+
                 return redirect(url_for('login_pat'))
         else:
             return redirect(url_for('signup_pat'))
@@ -101,13 +117,19 @@ def login_pat():
         passwordme = request.form.get('passwordme')
         print(emailme)
         print(passwordme)
-
-        sql = "select name,email,password from patient_details where email = '" + emailme + "' and password = '"+ passwordme+"'"
+        sql2 = "select pat_salt_key from pat_hash where pat_email = '" + emailme + "'"
+        mycursor.execute(sql2)
+        myresult1 = mycursor.fetchall()
+        salt_key_get = myresult1[0][0]
+        print(type(salt_key_get))
+        print(type(passwordme))
+        password_hash = hashlib.pbkdf2_hmac("sha256", passwordme.encode(), salt_key_get, 100000)
+        sql = "select name,email,password from patient_details where email = '" + emailme + "'"
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
-        if(len(myresult)>=1):
+        password_hashed = myresult[0][2]
+        if(len(myresult)>=1 and hmac.compare_digest(password_hashed, password_hash)):
             print(myresult[0][0])
-
             session['emailme'] = emailme
             return redirect(url_for('patient_dashboard'))
     return render_template('login_patient.html')
@@ -132,11 +154,20 @@ def verify_pat_pass():
         print(passwordme)
         email = session['emailme']
         print(email)
+
         if(emailme == email):
-            sql = "select name,email,password from patient_details where email = '" + emailme + "' and password = '" + passwordme + "'"
+            sql2 = "select pat_salt_key from pat_hash where pat_email = '" + emailme + "'"
+            mycursor.execute(sql2)
+            myresult1 = mycursor.fetchall()
+            salt_key_get = myresult1[0][0]
+            print(type(salt_key_get))
+            print(type(passwordme))
+            password_hash = hashlib.pbkdf2_hmac("sha256", passwordme.encode(), salt_key_get, 100000)
+            sql = "select name,email,password from patient_details where email = '" + emailme + "'"
             mycursor.execute(sql)
             myresult = mycursor.fetchall()
-            if(len(myresult)>=1):
+            password_hashed = myresult[0][2]
+            if(len(myresult)>=1 and hmac.compare_digest(password_hashed, password_hash)):
                 session['pat_name'] = myresult[0][0]
                 return redirect(url_for('patient_rec'))
     return render_template('verify_by_patient_pass.html')
@@ -147,13 +178,21 @@ def login_doc():
         passwordme = request.form.get('passwordme')
         print(emailme)
         print(passwordme)
-        sql = "select firstname,lastname,email,password from doctor_details where email = '" + emailme + "' and password = '" + passwordme + "'"
+        sql2 = "select doc_salt_key from doc_hash where doc_email = '" + emailme + "'"
+        mycursor.execute(sql2)
+        myresult1 = mycursor.fetchall()
+        salt_key_get = myresult1[0][0]
+        print(type(salt_key_get))
+        print(type(passwordme))
+        password_hash = hashlib.pbkdf2_hmac("sha256", passwordme.encode(), salt_key_get, 100000)
+        sql = "select firstname,lastname,email,password from doctor_details where email = '" + emailme + "'"
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
         doc_name = ''
         for x in myresult:
             doc_name = x[0]
-        if(len(myresult)>=1):
+        password_hashed = myresult[0][3]
+        if(len(myresult)>=1 and hmac.compare_digest(password_hashed, password_hash)):
             session['email_doc'] = emailme
             session['doc_name'] = doc_name
             return redirect(url_for('doctor_dashboard'))
@@ -400,39 +439,47 @@ def add_doc():
         status = request.form.get('status')
         submit = request.form.get('submit')
         doc_id = first+"00"+username
-        if avatar:
-            filename = secure_filename(avatar.filename)
-            avatar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        sql = "INSERT INTO doctor_details (doctor_id,firstname,lastname,username,email,password,specialism,gender,address,country,city,state,pincode,phone,profile_pic,bio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        image = "\static\images\img\\"+ str(avatar.filename)
-        # data = read_file(image)
-        print(image)
-        # image = str(avatarfile)
+        if password == confirm:
+            password_to_encrypt = password.encode()
+            salt_key = os.urandom(16)
+            password_hash = hashlib.pbkdf2_hmac("sha256", password_to_encrypt, salt_key, 100000)
+            if avatar:
+                filename = secure_filename(avatar.filename)
+                avatar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            sql = "INSERT INTO doctor_details (doctor_id,firstname,lastname,username,email,password,specialism,gender,address,country,city,state,pincode,phone,profile_pic,bio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            image = "\static\images\img\\"+ str(avatar.filename)
+            # data = read_file(image)
+            print(image)
+            # image = str(avatarfile)
 
 
-        #print(doc_pic)
-        val = (doc_id, first, last, username, email, password,specialism,gender,address, country, city, state, code, phone,image,bio)
-        mycursor.execute(sql, val)
-        mydb.commit()
-        print(first)
-        print(last)
-        print(username)
-        print(email)
-        print(password)
-        print(confirm)
-        print(specialism)
-        print(gender)
-        print(address)
-        print(country)
-        print(city)
-        print(state)
-        print(code)
-        print(phone)
-        print(avatar)
-        print(bio)
-        print(status)
-        print(submit)
-        return redirect(url_for('doctor_page'))
+            #print(doc_pic)
+            val = (doc_id, first, last, username, email, password_hash,specialism,gender,address, country, city, state, code, phone,image,bio)
+            mycursor.execute(sql, val)
+            mydb.commit()
+            sql1 = "Insert into doc_hash values(%s,%s)"
+            val1 = (email, salt_key)
+            mycursor.execute(sql1, val1)
+            mydb.commit()
+            print(first)
+            print(last)
+            print(username)
+            print(email)
+            print(password)
+            print(confirm)
+            print(specialism)
+            print(gender)
+            print(address)
+            print(country)
+            print(city)
+            print(state)
+            print(code)
+            print(phone)
+            print(avatar)
+            print(bio)
+            print(status)
+            print(submit)
+            return redirect(url_for('doctor_page'))
     return render_template('add_doctors.html')
 @app.route('/patient_page',methods=['POST','GET'])
 def patient_page():
@@ -706,16 +753,24 @@ def doc_pass():
         passwordme = request.form.get('passwordme')
         print(emailme)
         print(passwordme)
-
-        sql = "select name,email,password from patient_details where email = '" + emailme + "' and password = '" + passwordme + "'"
+        sql2 = "select pat_salt_key from pat_hash where pat_email = '" + emailme + "'"
+        mycursor.execute(sql2)
+        myresult1 = mycursor.fetchall()
+        salt_key_get = myresult1[0][0]
+        print(type(salt_key_get))
+        print(type(passwordme))
+        password_hash = hashlib.pbkdf2_hmac("sha256", passwordme.encode(), salt_key_get, 100000)
+        sql = "select name,email,password from patient_details where email = '" + emailme + "'"
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
+        password_hashed = myresult[0][2]
+
 
 
         pat_name = ''
         for x in myresult:
             pat_name = x[0]
-        if (len(myresult) >= 1):
+        if (len(myresult) >= 1 and hmac.compare_digest(password_hashed, password_hash)):
             session['pat_name1'] = pat_name
             return redirect(url_for('documents'))
     return render_template('verify_by_doctor_pass.html')
@@ -756,8 +811,9 @@ def prescription():
         morn = request.form.get('morn').split(',')
         date1 = date.today()
         print(date1)
-        doc = session['email_doc']
+        pat_name = session['pat_name1']
         doc_name = session['doc_name']
+        sql = "select "
         afternoon = request.form.get('afternoon').split(',')
         night = request.form.get('night').split(',')
         duration = request.form.get('duration').split(',')
@@ -771,8 +827,8 @@ def prescription():
         d = ImageDraw.Draw(img)
         font = ImageFont.truetype("arial.ttf", 30)
         font1 = ImageFont.truetype("arial.ttf", 50)
-        d.text((275,43), "Doctor's Details", fill='black', font=font1)
-        d.text((535, 185), "Patient's Details", fill='black', font=font1)
+        d.text((275,43), doc_name, fill='black', font=font1)
+        d.text((535, 185), pat_name , fill='black', font=font1)
         d.text((100, 200), "Date", fill='black', font=font)
         d.text((95, 350), "Tablet Name", fill='black', font=font)
         d.text((290, 350), "M", fill='black', font=font)
@@ -784,7 +840,7 @@ def prescription():
         d.text((775, 350), "Notes", fill='black', font=font)
         d.text((235, 960), "Lab Test Name", fill='black', font=font)
         d.text((565, 960), "Lab Test Date", fill='black', font=font)
-        d.text((110, 250), "date1" , fill='black', font=font)
+        d.text((110, 250), date1 , fill='black', font=font)
         y = 410
         for i in range(1,len(tablet)):
             d.text((95,y),tablet[i],fill='black',font=font)
