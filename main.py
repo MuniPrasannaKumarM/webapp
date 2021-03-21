@@ -330,10 +330,8 @@ def admin_dashboard():
     mycursor.execute(sql3)
     myresult3 = mycursor.fetchall()
     print(myresult)
-    for x in myresult:
-        print(int(x[2]))
-        print(int(x[3]))
-        print(int(x[4]))
+    # for x in myresult:
+        #print(int(x[4]))
     print("date ", myresult3)
     months = [0,0,0,0,0,0,0,0,0,0,0,0]
     weeks =[0,1,0,2,0,0,5]
@@ -379,13 +377,20 @@ def doctor_page():
         logout = request.form.get('logout')
         if (logout == 'logout'):
             return redirect(url_for('main'))
+
+        delete = request.form.get('delete')
+        print("delete ", delete)
+        sql1 = "delete from doctor_details where email = '" + delete + "'"
+        mycursor.execute(sql1)
+        mydb.commit()
+        return redirect(url_for('doctor_page'))
     doctors = []
     specialism = []
     places = []
     img = []
-
+    email =[]
     places = []
-    sql = "select firstname,lastname,specialism,city,state,profile_pic from doctor_details"
+    sql = "select firstname,lastname,specialism,city,state,profile_pic,email from doctor_details"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     i = 0
@@ -397,7 +402,7 @@ def doctor_page():
         doc_specialism = x[2]
         doc_place = x[3] + ", " + x[4]
         doc_img = x[5]
-
+        doc_email = x[6]
         print("doc_img ", doc_img)
         # if(i==1):
         #
@@ -405,13 +410,13 @@ def doctor_page():
         doctors.append(doc_name)
         specialism.append(doc_specialism)
         places.append(doc_place)
-
+        email.append(doc_email)
         i += 1
     print(doctors)
     print(specialism)
     print(places)
     print(img)
-    return render_template('doctors_page.html', doctors=doctors, specialism=specialism, img=img, places=places)
+    return render_template('doctors_page.html', doctors=doctors, specialism=specialism, img=img, places=places,email=email)
 @app.route('/add_doctor', methods=['POST', 'GET'])
 def add_doc():
     if request.method == 'POST':
@@ -840,7 +845,7 @@ def prescription():
         d.text((775, 350), "Notes", fill='black', font=font)
         d.text((235, 960), "Lab Test Name", fill='black', font=font)
         d.text((565, 960), "Lab Test Date", fill='black', font=font)
-        d.text((110, 250), date1 , fill='black', font=font)
+        d.text((110, 250), "date1" , fill='black', font=font)
         y = 410
         for i in range(1,len(tablet)):
             d.text((95,y),tablet[i],fill='black',font=font)

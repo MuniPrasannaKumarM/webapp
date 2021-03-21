@@ -1,14 +1,18 @@
-# # import mysql.connector
-# #
-# # mydb = mysql.connector.connect(
-# #   host="localhost",
-# #   user="root",
-# #   password="root",
-# #     database = "mydatabase"
-# # )
-# #
-# # print(mydb)
-# # mycursor = mydb.cursor()
+import mysql.connector
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="root",
+    database = "webapp"
+)
+mycursor = mydb.cursor()
+sql3 = "select date from doctor_patient_relation"
+mycursor.execute(sql3)
+myresult3 = mycursor.fetchall()
+print(myresult3)
+print(mydb)
+# mycursor = mydb.cursor()
 # # # mycursor.execute("CREATE TABLE IF NOT EXISTS customers1 (name VARCHAR(255), address VARCHAR(255))")
 # # # mycursor.execute("CREATE TABLE IF NOT EXISTS Patient_details (name VARCHAR(255),username VARCHAR(255),mobile NUMBER,email VARCHAR(255), age number,password VARCHAR(255))")
 # # # mycursor.execute("CREATE DATABASE mydatabase")
@@ -82,47 +86,47 @@
 # print(password2)
 #
 # print(sha256_crypt.verify("password", password))
-import hashlib
-import os
-
-import hmac
-
-# password = "!Example secure password!"
-# password = password.encode()
-# salt = os.urandom(16)
-# password_hash = hashlib.pbkdf2_hmac("sha256", password, salt, 100000)
+# import hashlib
+# import os
 #
-# print(password_hash)
-# correct_password = "!Example secure password!25"
-# encoded_correct_password = hashlib.pbkdf2_hmac("sha256", correct_password.encode(), salt, 100000)
-# print(hmac.compare_digest(password_hash, encoded_correct_password))
+# import hmac
 #
-password2 = "!Example secure password!"
-password2 = password2.encode()
-salt2 = os.urandom(28)
-print("salt2 ",salt2)
-password_hash2 = hashlib.pbkdf2_hmac("sha256", password2, salt2, 100000)
-
-print(password_hash2)
-correct_password2 = "!Example secure password!"
-salt3 = os.urandom(28)
-string = str(salt3)
-salt3 = bytes(salt3)
-print("salt3 ",type(salt3))
-encoded_correct_password2 = hashlib.pbkdf2_hmac("sha256", correct_password2.encode(), salt3, 100000)
-print(hmac.compare_digest(password_hash2, encoded_correct_password2))
-
-
-# correct_password = password
-# sql2 = "select pat_salt_key from pat_hash where pat_email = '"+email+"'"
-# mycursor.execute(sql2)
-# myresult1 = mycursor.fetchall()
-# salt_key_get = myresult1[0][0]
-# print(salt_key_get)
-# print(type(salt_key))
-# sql3 = "select password from patient_details where email = '" + email + "'"
-# mycursor.execute(sql3)
-# myresult3 = mycursor.fetchall()
-# password_hashed = myresult3[0][0]
-# encoded_correct_password = hashlib.pbkdf2_hmac("sha256", correct_password.encode(),salt_key_get, 100000)
-# print(" true or false",hmac.compare_digest(password_hashed, encoded_correct_password))
+# # password = "!Example secure password!"
+# # password = password.encode()
+# # salt = os.urandom(16)
+# # password_hash = hashlib.pbkdf2_hmac("sha256", password, salt, 100000)
+# #
+# # print(password_hash)
+# # correct_password = "!Example secure password!25"
+# # encoded_correct_password = hashlib.pbkdf2_hmac("sha256", correct_password.encode(), salt, 100000)
+# # print(hmac.compare_digest(password_hash, encoded_correct_password))
+# #
+# password2 = "!Example secure password!"
+# password2 = password2.encode()
+# salt2 = os.urandom(28)
+# print("salt2 ",salt2)
+# password_hash2 = hashlib.pbkdf2_hmac("sha256", password2, salt2, 100000)
+#
+# print(password_hash2)
+# correct_password2 = "!Example secure password!"
+# salt3 = os.urandom(28)
+# string = str(salt3)
+# salt3 = bytes(salt3)
+# print("salt3 ",type(salt3))
+# encoded_correct_password2 = hashlib.pbkdf2_hmac("sha256", correct_password2.encode(), salt3, 100000)
+# print(hmac.compare_digest(password_hash2, encoded_correct_password2))
+#
+#
+# # correct_password = password
+# # sql2 = "select pat_salt_key from pat_hash where pat_email = '"+email+"'"
+# # mycursor.execute(sql2)
+# # myresult1 = mycursor.fetchall()
+# # salt_key_get = myresult1[0][0]
+# # print(salt_key_get)
+# # print(type(salt_key))
+# # sql3 = "select password from patient_details where email = '" + email + "'"
+# # mycursor.execute(sql3)
+# # myresult3 = mycursor.fetchall()
+# # password_hashed = myresult3[0][0]
+# # encoded_correct_password = hashlib.pbkdf2_hmac("sha256", correct_password.encode(),salt_key_get, 100000)
+# # print(" true or false",hmac.compare_digest(password_hashed, encoded_correct_password))
