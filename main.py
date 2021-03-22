@@ -67,9 +67,9 @@ def signup_pat():
         myresult = mycursor.fetchall()
 
         if(send_otp == "Send Otp" and len(myresult)==0):
-            # msg = Message('OTP',sender = 'mmpkvelammal@gmail.com', recipients = [email])
-            # msg.body = name+uname+str(mob)+email+str(otp)
-            # mail.send(msg)
+            msg = Message('OTP',sender = 'mmpkvelammal@gmail.com', recipients = [email])
+            msg.body = name+" Your Otp is "+str(otp)
+            mail.send(msg)
             return render_template('register_patient.html',name=name,uname=uname,mob=mob,email=email,age=age,visible='none',visible1='block',visible2='none')
         elif(submitotp == "Submit Otp"):
             enter_otp = request.form.get('enterotp')
@@ -85,9 +85,9 @@ def signup_pat():
             print(confirm)
 
             if(password == confirm):
-                # msg1 = Message('OTP', sender='mmpkvelammal@gmail.com', recipients=[email])
-                # msg1.body = "Successfully Registered as patient"
-                # mail.send(msg1)
+                msg1 = Message('OTP', sender='mmpkvelammal@gmail.com', recipients=[email])
+                msg1.body = "Mr."+name+"Successfully Registered as patient"
+                mail.send(msg1)
                 password_to_encrypt = password.encode()
                 salt_key = os.urandom(16)
                 password_hash = hashlib.pbkdf2_hmac("sha256", password_to_encrypt, salt_key, 100000)
@@ -466,6 +466,9 @@ def add_doc():
             val1 = (email, salt_key)
             mycursor.execute(sql1, val1)
             mydb.commit()
+            msg = Message(first, sender='mmpkvelammal@gmail.com', recipients=[email])
+            msg.body = first+" "+last + " is successfully added to our website you can login with given email+"+email+" and password " +password
+            mail.send(msg)
             print(first)
             print(last)
             print(username)
@@ -546,7 +549,7 @@ def doctor_dashboard():
         mycursor.execute(sql3)
         myresult3 = mycursor.fetchall()
         months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        weeks = [0, 1, 0, 2, 0, 0, 5]
+        weeks = [0, 1, 0, 0, 0, 0, 0]
         for x in myresult3:
             month = x[0].split(' ')
             print(month[1])
@@ -600,8 +603,8 @@ def appointments():
         pat_name.append(x[1])
         age.append(x[2])
         date.append(x[3])
-        starttime.append(x[4])
-        endtime.append(x[5])
+        starttime.append(x[6])
+        endtime.append(x[7])
 
 
 
